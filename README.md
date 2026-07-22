@@ -79,7 +79,7 @@ el.setScroll([{ title:'标题', subtitle:'副标题' }]);
 ## 项目结构
 
 ```
-├── build.mjs              # esbuild 构建脚本，输出到 ../liquid-glass-cdn-clean/
+├── build.mjs              # esbuild 构建脚本
 ├── src-bundle/
 │   ├── liquid-glass.ts    # Web Component 自定义元素
 │   └── empty-react.ts     # React 别名为空桩
@@ -93,7 +93,7 @@ el.setScroll([{ title:'标题', subtitle:'副标题' }]);
 └── README.md
 ```
 
-> CDN 部署目录在 `../liquid-glass-cdn-clean/`，包含构建产物、试玩页和文档。
+> CDN 部署在 [glass.goose.cc.cd](https://glass.goose.cc.cd)，包含构建产物、试玩页和文档。
 
 ## 构建
 
@@ -102,7 +102,7 @@ npm install esbuild
 node build.mjs
 ```
 
-输出到 `../liquid-glass-cdn-clean/liquid-glass.js`（~345KB，gzip ~95KB）。
+输出 `liquid-glass.js`（~345KB，gzip ~95KB）。部署到 CDN 时将产物放入对应目录即可。
 
 ## 技术栈
 

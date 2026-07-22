@@ -12,7 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 await build({
   entryPoints: [path.join(__dirname, 'src-bundle/liquid-glass.ts')],
   bundle: true,
-  outfile: path.join(__dirname, '../liquid-glass-cdn-clean/liquid-glass.js'),
+  outfile: path.join(__dirname, 'liquid-glass.js'),
   format: 'iife',
   platform: 'browser',
   target: ['es2019'],
@@ -21,4 +21,4 @@ await build({
   legalComments: 'none',
   logLevel: 'info',
 })
-console.log('built liquid-glass.js -> ../liquid-glass-cdn-clean/liquid-glass.js')
+console.log('built liquid-glass.js')
