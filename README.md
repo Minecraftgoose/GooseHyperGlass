@@ -138,7 +138,7 @@ Chrome 80+ / Edge 80+ / Safari 14+ / Firefox 80+
 
 ## License
 
-MIT
+Apache License 2.0
 
 ---
 
@@ -272,4 +272,4 @@ Chrome 80+ / Edge 80+ / Safari 14+ / Firefox 80+
 
 ## License
 
-MIT
+Apache License 2.0
