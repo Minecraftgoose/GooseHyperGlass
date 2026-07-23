@@ -124,13 +124,14 @@ class LiquidGlass extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['mode', 'dark', 'wallpaper', 'clock-sdf', 'dpr', 'corner-style', 'blur-tap-cap', 'overlay-buttons', 'tabs', 'buttons', 'dialog', 'scroll']
+    return ['mode', 'dark', 'wallpaper', 'clock-sdf', 'dpr', 'corner-style', 'blur-tap-cap', 'overlay-buttons', 'theme-button', 'tabs', 'buttons', 'dialog', 'scroll']
   }
 
   connectedCallback() {
     if (this._renderer) return
     this._dark = this.hasAttribute('dark')
     const overlayButtons = this.hasAttribute('overlay-buttons')
+    this._showThemeButton = this.hasAttribute('theme-button')
     this._state = { ...DEFAULT_CATALOG_STATE, hideOverlayButtons: !overlayButtons }
 
     const renderer = new LiquidGlassRenderer(this._canvas)
@@ -230,6 +231,10 @@ class LiquidGlass extends HTMLElement {
       this._state = { ...this._state, hideOverlayButtons: !this.hasAttribute('overlay-buttons') }
       this._rebuild()
       this._emitState()
+    } else if (name === 'theme-button') {
+      this._showThemeButton = this.hasAttribute('theme-button')
+      this._rebuild()
+      this._emitState()
     } else if (name === 'tabs') {
       if (val) {
         try { this._tabsConfig = JSON.parse(val) } catch { this._tabsConfig = null }
@@ -268,9 +273,18 @@ class LiquidGlass extends HTMLElement {
 
   private _maybeLoadGradient() {
     const wp = this.getAttribute('wallpaper')
-    if (this._w > 0 && (!wp || wp === 'gradient') && !this._gradientLoaded) {
+    if (this._w <= 0 || this._gradientLoaded) return
+    // 显式 wallpaper="gradient" → 生成渐变
+    if (wp === 'gradient') {
       this._gradientLoaded = true
       this._renderer?.loadWallpaper(genGradient(!this._dark, this._w, this._h)).catch(() => {})
+    } else if (!wp) {
+      // 不传 wallpaper → 默认透明
+      this._gradientLoaded = true
+      const tc = document.createElement('canvas')
+      tc.width = Math.max(2, this._w | 0)
+      tc.height = Math.max(2, this._h | 0)
+      this._renderer?.loadWallpaper(tc.toDataURL()).catch(() => {})
     }
   }
 
@@ -367,7 +381,7 @@ class LiquidGlass extends HTMLElement {
       this._onBack,
       this._renderer ? { current: this._renderer } : undefined,
       !this._dark,
-      this.hasAttribute('overlay-buttons') ? this._onToggleTheme : undefined,
+      this.hasAttribute('overlay-buttons') || this.hasAttribute('theme-button') ? this._onToggleTheme : undefined,
       undefined,
       this._onButtonTap,
       this._tabsConfig,
