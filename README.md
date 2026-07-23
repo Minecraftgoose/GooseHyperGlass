@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Minecraftgoose/GooseHyperGlass/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+  <a href="https://github.com/Minecraftgoose/GooseHyperGlass/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="Apache License 2.0">
   <a href="https://glass.goose.cc.cd/liquid-glass.js"><img src="https://img.shields.io/badge/CDN-online-brightgreen.svg" alt="CDN"></a>
   <img src="https://img.shields.io/badge/tech-WebGL%201.0-orange.svg" alt="WebGL">
   <img src="https://img.shields.io/badge/zero-deps-9cf.svg" alt="Zero Dependencies">
@@ -143,7 +143,7 @@ Apache License 2.0
 ---
 
 <p align="center">
-  <a href="https://github.com/Minecraftgoose/GooseHyperGlass/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+  <a href="https://github.com/Minecraftgoose/GooseHyperGlass/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="Apache License 2.0">
   <a href="https://glass.goose.cc.cd/liquid-glass.js"><img src="https://img.shields.io/badge/CDN-online-brightgreen.svg" alt="CDN"></a>
   <img src="https://img.shields.io/badge/tech-WebGL%201.0-orange.svg" alt="WebGL">
   <img src="https://img.shields.io/badge/zero-deps-9cf.svg" alt="Zero Dependencies">
