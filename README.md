@@ -5,6 +5,17 @@
   <a href="#english">🇬🇧 English</a>
 </p>
 
+<p align="center">
+  <a href="https://github.com/Minecraftgoose/GooseHyperGlass/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+  <a href="https://glass.goose.cc.cd/liquid-glass.js"><img src="https://img.shields.io/badge/CDN-online-brightgreen.svg" alt="CDN"></a>
+  <img src="https://img.shields.io/badge/tech-WebGL%201.0-orange.svg" alt="WebGL">
+  <img src="https://img.shields.io/badge/zero-deps-9cf.svg" alt="Zero Dependencies">
+  <img src="https://img.shields.io/badge/source-582KB%20TypeScript-yellow.svg" alt="TypeScript">
+  <img src="https://img.shields.io/badge/7-components-ff69b4.svg" alt="Components">
+  <img src="https://img.shields.io/github/stars/Minecraftgoose/GooseHyperGlass?style=social" alt="Stars">
+  <img src="https://img.shields.io/github/last-commit/Minecraftgoose/GooseHyperGlass?label=updated" alt="Last Commit">
+</p>
+
 ---
 
 # 中文
@@ -130,6 +141,17 @@ Chrome 80+ / Edge 80+ / Safari 14+ / Firefox 80+
 MIT
 
 ---
+
+<p align="center">
+  <a href="https://github.com/Minecraftgoose/GooseHyperGlass/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+  <a href="https://glass.goose.cc.cd/liquid-glass.js"><img src="https://img.shields.io/badge/CDN-online-brightgreen.svg" alt="CDN"></a>
+  <img src="https://img.shields.io/badge/tech-WebGL%201.0-orange.svg" alt="WebGL">
+  <img src="https://img.shields.io/badge/zero-deps-9cf.svg" alt="Zero Dependencies">
+  <img src="https://img.shields.io/badge/source-582KB%20TypeScript-yellow.svg" alt="TypeScript">
+  <img src="https://img.shields.io/badge/7-components-ff69b4.svg" alt="Components">
+  <img src="https://img.shields.io/github/stars/Minecraftgoose/GooseHyperGlass?style=social" alt="Stars">
+  <img src="https://img.shields.io/github/last-commit/Minecraftgoose/GooseHyperGlass?label=updated" alt="Last Commit">
+</p>
 
 # English
 
