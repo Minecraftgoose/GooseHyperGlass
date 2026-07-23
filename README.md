@@ -1,6 +1,6 @@
 # GooseHyperGlassCDN2.0
 
-纯 WebGL 渲染的液态玻璃 UI 组件库。一个 `<script>` 标签即用，零运行时依赖。
+二创的 WebGL 渲染的液态玻璃 UI 组件库。一个 `<script>` 标签即用，零运行时依赖。
 
 — Minecraft_goose 开发 —
 
