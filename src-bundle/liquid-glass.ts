@@ -1,7 +1,7 @@
-// Native custom-element wrapper around the REAL wong2 liquid-glass-webgl
+// Native custom-element wrapper around the martin65536/liquid-glass-webgl
 // renderer + catalog. Faithful port of:
-//   - src/components/liquid-glass/context.tsx  (LiquidGlassCanvas gesture system)
-//   - src/app/page.tsx                          (buildCatalog wiring / state)
+//   - src/components/liquid-glass/context.tsx  (GooseCanvas gesture system)
+//   - src/app/page.tsx                          (gooseBuild wiring / state)
 // No React ships — `react` is aliased to an empty stub at build time.
 //
 // Usage:
@@ -14,13 +14,13 @@
 //
 // Assets are NEVER bundled. `wallpaper` = image URL (default: a generated
 // gradient, file:// safe). `clock-sdf` = optional URL for SDF clock texture.
-import { LiquidGlassRenderer } from '../liquid-glass-webgl-main/src/components/liquid-glass/renderer'
+import { LiquidGlassRenderer } from './renderer'
 import {
-  buildCatalog,
-  CatalogDestination,
-  DEFAULT_CATALOG_STATE,
-  draggingGroups,
-} from '../liquid-glass-webgl-main/src/components/liquid-glass/catalog'
+  gooseBuild,
+  GooseDest,
+  gooseDefState,
+  gooseDragGroups,
+} from './catalog'
 
 type AnyEl = any
 type Interact = {
@@ -31,24 +31,28 @@ type Interact = {
   onTransform?: (pan: { x: number; y: number }, zoom: number, rot: number) => void
 }
 
-const MODE_MAP: Record<string, CatalogDestination> = {
-  buttons: CatalogDestination.Buttons,
-  toggle: CatalogDestination.Toggle,
-  slider: CatalogDestination.Slider,
-  'single-slider': CatalogDestination.SingleSlider,
-  'single-toggle': CatalogDestination.SingleToggle,
-  'bottom-tabs': CatalogDestination.BottomTabs,
-  'single-bottom-tabs': CatalogDestination.SingleBottomTabs,
-  'toggle-card': CatalogDestination.ToggleCard,
-  'slider-card': CatalogDestination.SliderCard,
-  'bottom-tabs-2': CatalogDestination.BottomTabs2,
-  dialog: CatalogDestination.Dialog,
-  magnifier: CatalogDestination.Magnifier,
-  'scroll-container': CatalogDestination.ScrollContainer,
-  'lazy-scroll-container': CatalogDestination.LazyScrollContainer,
+const MODE_MAP: Record<string, GooseDest> = {
+  buttons: GooseDest.Buttons,
+  toggle: GooseDest.Toggle,
+  slider: GooseDest.Slider,
+  'single-slider': GooseDest.SingleSlider,
+  'single-toggle': GooseDest.SingleToggle,
+  'bottom-tabs': GooseDest.BottomTabs,
+  'single-bottom-tabs': GooseDest.SingleBottomTabs,
+  'toggle-card': GooseDest.ToggleCard,
+  'slider-card': GooseDest.SliderCard,
+  'bottom-tabs-2': GooseDest.BottomTabs2,
+  dialog: GooseDest.Dialog,
+  magnifier: GooseDest.Magnifier,
+  'scroll-container': GooseDest.ScrollContainer,
+  'lazy-scroll-container': GooseDest.LazyScrollContainer,
+  rating: GooseDest.Rating,
+  'rating-card': GooseDest.Rating,
+  'ring-progress': GooseDest.RingProgress,
+  'ring-progress-card': GooseDest.RingProgress,
 }
 
-// Reverse map: CatalogDestination enum value -> mode name (for lg-navigate event).
+// Reverse map: GooseDest enum value -> mode name (for lg-navigate event).
 const ENUM_TO_MODE: Record<number, string> = Object.fromEntries(
   Object.entries(MODE_MAP).map(([k, v]) => [v as number, k])
 )
@@ -112,7 +116,7 @@ class LiquidGlass extends HTMLElement {
 
   constructor() {
     super()
-    this._state = { ...DEFAULT_CATALOG_STATE }
+    this._state = { ...gooseDefState }
     const shadow = this.attachShadow({ mode: 'open' })
     const style = document.createElement('style')
     style.textContent =
@@ -132,7 +136,7 @@ class LiquidGlass extends HTMLElement {
     this._dark = this.hasAttribute('dark')
     const overlayButtons = this.hasAttribute('overlay-buttons')
     this._showThemeButton = this.hasAttribute('theme-button')
-    this._state = { ...DEFAULT_CATALOG_STATE, hideOverlayButtons: !overlayButtons }
+    this._state = { ...gooseDefState, hideOverlayButtons: !overlayButtons }
 
     const renderer = new LiquidGlassRenderer(this._canvas)
     this._renderer = renderer
@@ -149,14 +153,14 @@ class LiquidGlass extends HTMLElement {
     if (corner != null) renderer.cornerStyle = parseFloat(corner)
 
     const mode = this._mode()
-    renderer.setBackgroundColor(mode === CatalogDestination.Home ? [0, 0, 0] : null)
+    renderer.gooseBG(mode === GooseDest.Home ? [0, 0, 0] : null)
 
     const wp = this.getAttribute('wallpaper')
     if (wp && wp !== 'gradient') {
-      renderer.loadWallpaper(wp).catch((e: any) => console.warn('[liquid-glass] wallpaper load failed:', e))
+      renderer.gooseLoadWP(wp).catch((e: any) => console.warn('[liquid-glass] wallpaper load failed:', e))
     }
     const sdf = this.getAttribute('clock-sdf')
-    if (sdf) renderer.loadSdfTexture(sdf).catch((e: any) => console.warn('[liquid-glass] sdf load failed:', e))
+    if (sdf) renderer.gooseLoadSDF(sdf).catch((e: any) => console.warn('[liquid-glass] sdf load failed:', e))
 
     const ro = new ResizeObserver(() => this._resize())
     ro.observe(this)
@@ -165,7 +169,7 @@ class LiquidGlass extends HTMLElement {
     this._onWheel = (e: WheelEvent) => {
       e.preventDefault()
       const delta = e.deltaY !== 0 ? e.deltaY : e.deltaX
-      renderer.setScrollY(renderer.getScrollY() + delta)
+      renderer.gooseScrollY(renderer.gooseGetScrollY() + delta)
     }
     this._canvas.addEventListener('wheel', this._onWheel, { passive: false })
     this._canvas.addEventListener('pointerdown', this._onDown)
@@ -186,7 +190,7 @@ class LiquidGlass extends HTMLElement {
       this._canvas.removeEventListener('pointercancel', this._onUp)
     }
     if (this._renderer) {
-      this._renderer.dispose()
+      this._renderer.gooseKill()
       this._renderer = null
     }
   }
@@ -197,21 +201,21 @@ class LiquidGlass extends HTMLElement {
     if (name === 'mode') {
       const oldM = (_old || 'bottom-tabs').toLowerCase()
       if (oldM !== 'dialog') this._prevMode = oldM
-      r.setScrollY(0)
+      r.gooseScrollY(0)
       this._rebuild()
     } else if (name === 'dark') {
       this._dark = this.hasAttribute('dark')
-      r.setBackgroundColor(this._mode() === CatalogDestination.Home ? [0, 0, 0] : null)
+      r.gooseBG(this._mode() === GooseDest.Home ? [0, 0, 0] : null)
       this._gradientLoaded = false
       this._maybeLoadGradient()
       this._rebuild()
       this._emitState()
     } else if (name === 'wallpaper') {
       this._gradientLoaded = false
-      if (val && val !== 'gradient') r.loadWallpaper(val).catch(() => {})
+      if (val && val !== 'gradient') r.gooseLoadWP(val).catch(() => {})
       else this._maybeLoadGradient()
     } else if (name === 'clock-sdf') {
-      if (val) r.loadSdfTexture(val).catch(() => {})
+      if (val) r.gooseLoadSDF(val).catch(() => {})
     } else if (name === 'dpr') {
       const dv = parseFloat(val || '0')
       const deviceDpr = window.devicePixelRatio || 1
@@ -220,12 +224,12 @@ class LiquidGlass extends HTMLElement {
     } else if (name === 'corner-style') {
       if (val != null) {
         r.cornerStyle = parseFloat(val)
-        r.requestRender()
+        r.gooseReqRender()
       }
     } else if (name === 'blur-tap-cap') {
       if (val != null) {
         r.blurTapCap = Math.max(1, Math.min(33, parseInt(val) || 17))
-        r.requestRender()
+        r.gooseReqRender()
       }
     } else if (name === 'overlay-buttons') {
       this._state = { ...this._state, hideOverlayButtons: !this.hasAttribute('overlay-buttons') }
@@ -266,9 +270,9 @@ class LiquidGlass extends HTMLElement {
     }
   }
 
-  private _mode(): CatalogDestination {
+  private _mode(): GooseDest {
     const m = (this.getAttribute('mode') || 'bottom-tabs').toLowerCase()
-    return MODE_MAP[m] ?? CatalogDestination.BottomTabs
+    return MODE_MAP[m] ?? GooseDest.BottomTabs
   }
 
   private _maybeLoadGradient() {
@@ -277,14 +281,14 @@ class LiquidGlass extends HTMLElement {
     // 显式 wallpaper="gradient" → 生成渐变
     if (wp === 'gradient') {
       this._gradientLoaded = true
-      this._renderer?.loadWallpaper(genGradient(!this._dark, this._w, this._h)).catch(() => {})
+      this._renderer?.gooseLoadWP(genGradient(!this._dark, this._w, this._h)).catch(() => {})
     } else if (!wp) {
       // 不传 wallpaper → 默认透明
       this._gradientLoaded = true
       const tc = document.createElement('canvas')
       tc.width = Math.max(2, this._w | 0)
       tc.height = Math.max(2, this._h | 0)
-      this._renderer?.loadWallpaper(tc.toDataURL()).catch(() => {})
+      this._renderer?.gooseLoadWP(tc.toDataURL()).catch(() => {})
     }
   }
 
@@ -295,7 +299,7 @@ class LiquidGlass extends HTMLElement {
     this._h = r.height
     this._canvas.style.width = r.width + 'px'
     this._canvas.style.height = r.height + 'px'
-    this._renderer?.resize(r.width, r.height)
+    this._renderer?.gooseResize(r.width, r.height)
     this._maybeLoadGradient()
     this._rebuild()
   }
@@ -316,7 +320,7 @@ class LiquidGlass extends HTMLElement {
     this._rebuild()
   }
 
-  private _onNavigate = (d: CatalogDestination) => {
+  private _onNavigate = (d: GooseDest) => {
     const name = ENUM_TO_MODE[d] ?? ('dest:' + d)
     this.dispatchEvent(new CustomEvent('lg-navigate', { detail: { dest: d, name }, bubbles: true }))
   }
@@ -336,13 +340,17 @@ class LiquidGlass extends HTMLElement {
   private _onLinkTap = (index: number, href?: string) => {
     this.dispatchEvent(new CustomEvent('lg-linktap', { detail: { index, href }, bubbles: true }))
   }
+  /** 直接设置组件状态（供外部调用，如 setState({ ratingValue: 3 })）。 */
+  setState(patch: Record<string, unknown>) {
+    this._setState(patch as AnyEl)
+  }
   /** 配置底部标签栏内容：[[{icon,label}...],[{icon,label}...]]（两组，可只传一组）。icon 为 SVG path 字符串。 */
   setTabs(config: AnyEl) {
     this._tabsConfig = config
     this._rebuild()
   }
   /** 配置按钮组：[{id?, label?, style?}]，每个按钮独立（文字 + 样式）。style: 'transparent'|'surface'|'blue'|'orange' 或自定义 rgba 色。 */
-  setButtons(config: AnyEl) {
+  gooseButtons(config: AnyEl) {
     this._buttonsConfig = config
     this._rebuild()
   }
@@ -358,7 +366,7 @@ class LiquidGlass extends HTMLElement {
   }
   private _onToggleTheme = () => {
     this._dark = !this._dark
-    this._renderer?.setBackgroundColor(this._mode() === CatalogDestination.Home ? [0, 0, 0] : null)
+    this._renderer?.gooseBG(this._mode() === GooseDest.Home ? [0, 0, 0] : null)
     this._gradientLoaded = false
     this._maybeLoadGradient()
     this._emitState()
@@ -371,7 +379,7 @@ class LiquidGlass extends HTMLElement {
     const H = this._h
     if (!W || !H) return
     const dest = this._mode()
-    const result = buildCatalog(
+    const result = gooseBuild(
       dest,
       W,
       H,
@@ -393,9 +401,9 @@ class LiquidGlass extends HTMLElement {
     )
     this._elements = result.elements
     this._interactions = result.interactions
-    this._renderer.setElements(this._elements)
-    this._renderer.setContentHeight(result.contentHeight)
-    this._renderer.requestRender()
+    this._renderer.gooseElements(this._elements)
+    this._renderer.gooseContentH(result.contentHeight)
+    this._renderer.gooseReqRender()
     this._syncTargets()
   }
 
@@ -404,19 +412,19 @@ class LiquidGlass extends HTMLElement {
     const r = this._renderer
     if (!r) return
     const sync = (id: string, fn: () => void) => {
-      if (draggingGroups.has(id)) return
+      if (gooseDragGroups.has(id)) return
       try {
         fn()
       } catch {
         /* group not present in this mode */
       }
     }
-    sync('toggle1', () => r.setToggleTarget('toggle1', this._state.toggleOn ? 1 : 0))
-    sync('toggle2', () => r.setToggleTarget('toggle2', this._state.toggleOn ? 1 : 0))
-    sync('tabs3', () => r.setTabSelected('tabs3', this._state.selectedTab, (this._tabsConfig?.[0]?.length ?? 3)))
-    sync('tabs4', () => r.setTabSelected('tabs4', this._state.selectedTab2, (this._tabsConfig?.[1]?.length ?? 4)))
-    sync('slider1', () => r.setToggleTarget('slider1', this._state.sliderValue / 100))
-    sync('slider2', () => r.setToggleTarget('slider2', this._state.sliderValue / 100))
+    sync('toggle1', () => r.gooseTglTarget('toggle1', this._state.toggleOn ? 1 : 0))
+    sync('toggle2', () => r.gooseTglTarget('toggle2', this._state.toggleOn ? 1 : 0))
+    sync('tabs3', () => r.gooseTabSel('tabs3', this._state.selectedTab, (this._tabsConfig?.[0]?.length ?? 3)))
+    sync('tabs4', () => r.gooseTabSel('tabs4', this._state.selectedTab2, (this._tabsConfig?.[1]?.length ?? 4)))
+    sync('slider1', () => r.gooseTglTarget('slider1', this._state.sliderValue / 100))
+    sync('slider2', () => r.gooseTglTarget('slider2', this._state.sliderValue / 100))
   }
 
   // ---- pointer gesture system (faithful port of context.tsx) ----
@@ -459,7 +467,7 @@ class LiquidGlass extends HTMLElement {
     const renderer = this._renderer
     if (!renderer) return
     const { x, y } = this._localPos(e)
-    const scrollY = renderer.getScrollY()
+    const scrollY = renderer.gooseGetScrollY()
     const els = this._elements
     const interactions = this._interactions
 
@@ -497,7 +505,7 @@ class LiquidGlass extends HTMLElement {
       if (existingEntry && interactions?.[hitId]?.onTransform) {
         const [partnerPid, partnerGs] = existingEntry
         if (hit.isInteractive && (hit.kind === 'button' || hit.kind === 'text')) {
-          renderer.setPressed(hitId, false)
+          renderer.goosePress(hitId, false)
         }
         const p1 = { x: partnerGs.x, y: partnerGs.y }
         const p2 = { x, y }
@@ -516,7 +524,7 @@ class LiquidGlass extends HTMLElement {
           startX: x,
           startY: y,
           startClientY: e.clientY,
-          startScrollY: renderer.getScrollY(),
+          startScrollY: renderer.gooseGetScrollY(),
           dragStarted: false,
           mode: 'transform',
           hasDrag: !!interactions?.[hitId]?.onDrag,
@@ -545,7 +553,7 @@ class LiquidGlass extends HTMLElement {
       startX: x,
       startY: y,
       startClientY: e.clientY,
-      startScrollY: renderer.getScrollY(),
+      startScrollY: renderer.gooseGetScrollY(),
       dragStarted: false,
       mode: 'pending',
       hasDrag,
@@ -562,7 +570,7 @@ class LiquidGlass extends HTMLElement {
         hit.kind === 'text' ||
         (hit.kind === 'glass-shape' && !hasDrag0 && !!interactions?.[hit.id]?.onTap)
       ) {
-        renderer.setPressed(hit.id, true, { x, y })
+        renderer.goosePress(hit.id, true, { x, y })
       }
     }
       try {
@@ -626,7 +634,7 @@ class LiquidGlass extends HTMLElement {
       if (id0) {
         const el0 = this._elements.find((b: AnyEl) => b.id === id0)
         if (el0?.kind === 'button' && el0.isInteractive) {
-          renderer.setDragPosition(id0, { x, y })
+          renderer.gooseDragPos(id0, { x, y })
         }
       }
       if (absDx < MOVE_THRESHOLD && absDy < MOVE_THRESHOLD) return
@@ -648,7 +656,7 @@ class LiquidGlass extends HTMLElement {
         gs.dragStarted = true
         this._interactions?.[id!]?.onDragStart?.({ x, y })
       } else if (isButton || isShapeButton) {
-        renderer.setDragPosition(id!, { x, y })
+        renderer.gooseDragPos(id!, { x, y })
       } else {
         const SCROLL_TAKEOVER_THRESHOLD = 14
         const verticalDominant = absDy > absDx + 2 && absDy >= SCROLL_TAKEOVER_THRESHOLD
@@ -659,11 +667,11 @@ class LiquidGlass extends HTMLElement {
           if (otherScrolling) return
           if (id) {
             const el = this._elements.find((b: AnyEl) => b.id === id)
-            if (el?.isInteractive && el.kind === 'text') renderer.setPressed(id, false)
+            if (el?.isInteractive && el.kind === 'text') renderer.goosePress(id, false)
           }
           gs.mode = 'scroll'
           const scrollDelta = e.clientY - gs.startClientY
-          renderer.setScrollY(gs.startScrollY - scrollDelta)
+          renderer.gooseScrollY(gs.startScrollY - scrollDelta)
           return
         }
       }
@@ -671,7 +679,7 @@ class LiquidGlass extends HTMLElement {
 
     if (gs.mode === 'scroll') {
       const scrollDelta = e.clientY - gs.startClientY
-      renderer.setScrollY(gs.startScrollY - scrollDelta)
+      renderer.gooseScrollY(gs.startScrollY - scrollDelta)
       return
     }
 
@@ -680,7 +688,7 @@ class LiquidGlass extends HTMLElement {
       if (!id) return
       const el = this._elements.find((b: AnyEl) => b.id === id)
       if (!el) return
-      if (el.kind === 'button' && el.isInteractive) renderer.setDragPosition(id, { x, y })
+      if (el.kind === 'button' && el.isInteractive) renderer.gooseDragPos(id, { x, y })
       this._interactions?.[id]?.onDrag?.({ x, y }, { x: dx, y: dy })
     }
   }
@@ -741,13 +749,13 @@ class LiquidGlass extends HTMLElement {
             el.kind === 'text' ||
             (el.kind === 'glass-shape' && !hasDrag1 && !!this._interactions?.[id]?.onTap)
           ) {
-            renderer.setPressed(id, false)
+            renderer.goosePress(id, false)
           }
         }
       }
       if (mode === 'scroll') {
         const v = this._computeReleaseVelocity(gs.velocitySamples)
-        if (Math.abs(v) > 50) renderer.setScrollVelocity(v)
+        if (Math.abs(v) > 50) renderer.gooseScrollV(v)
       }
       if (id) {
         const { x, y } = this._localPos(e)

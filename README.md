@@ -1,4 +1,4 @@
-# LiquidGlassCDN
+# GooseHyperGlassCDN 2.0
 
 <p align="center">
   <a href="#中文">🇨🇳 中文</a> &nbsp;|&nbsp;
@@ -6,14 +6,14 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Minecraftgoose/LiquidGlassCDN/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="Apache License 2.0">
+  <a href="https://github.com/Minecraftgoose/GooseHyperGlass/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="Apache License 2.0">
   <a href="https://glass.goose.cc.cd/liquid-glass.js"><img src="https://img.shields.io/badge/CDN-online-brightgreen.svg" alt="CDN"></a>
   <img src="https://img.shields.io/badge/tech-WebGL%201.0-orange.svg" alt="WebGL">
   <img src="https://img.shields.io/badge/zero-deps-9cf.svg" alt="Zero Dependencies">
   <img src="https://img.shields.io/badge/source-582KB%20TypeScript-yellow.svg" alt="TypeScript">
   <img src="https://img.shields.io/badge/7-components-ff69b4.svg" alt="Components">
-  <img src="https://img.shields.io/github/stars/Minecraftgoose/LiquidGlassCDN?style=social" alt="Stars">
-  <img src="https://img.shields.io/github/last-commit/Minecraftgoose/LiquidGlassCDN?label=updated" alt="Last Commit">
+  <img src="https://img.shields.io/github/stars/Minecraftgoose/GooseHyperGlass?style=social" alt="Stars">
+  <img src="https://img.shields.io/github/last-commit/Minecraftgoose/GooseHyperGlass?label=updated" alt="Last Commit">
 </p>
 
 ---
@@ -32,7 +32,7 @@
 | WebGL 移植版 | [martin65536/liquid-glass-webgl](https://github.com/martin65536/liquid-glass-webgl) | Next.js, WebGL |
 | AI 辅助开发 | WorkBuddy · DeepSeekv4-pro · DeepSeekv4-flash · Hunyuan3 | 代码生成、文档、调试 |
 
-LiquidGlassCDN 在其基础上做了：
+GooseHyperGlassCDN2.0 在其基础上做了：
 - Web 端打包成零依赖的 IIFE bundle（esbuild）
 - 抽出 React 依赖为空桩，纯 Custom Element 实现
 - 提供 CDN 部署和静态文档站
@@ -100,7 +100,7 @@ el.setScroll([{ title:'标题 Title', subtitle:'副标题 Subtitle' }]);
 ├── src-bundle/
 │   ├── liquid-glass.ts    # Web Component 自定义元素 / Custom Element
 │   └── empty-react.ts     # React 别名为空桩 / React alias stub
-├── liquid-glass-webgl-main/src/components/liquid-glass/
+├── liquid-glass/src/components/liquid-glass/
 │   ├── renderer/          # WebGL 渲染器 / WebGL renderer
 │   ├── catalog/           # 各组件 builder / Component builders
 │   ├── shaders/           # GLSL 着色器 / GLSL shaders
@@ -138,6 +138,14 @@ Chrome 80+ / Edge 80+ / Safari 14+ / Firefox 80+
 ## 关于某"耻辱柱"的回应
 
 martin65536 在其 README 中设置了"耻辱柱"章节，列出了以下指控。由于本项目的渲染引擎代码源自 martin65536/liquid-glass-webgl，这些指控的逻辑值得玩味。
+
+### "系统性抹除署名"
+
+他在 Issue 里说我"在宣传文案中把上游作者抹除"。
+
+看看我们现在的官网底部——**martin65536/liquid-glass-webgl** 几个大字 28px 加粗橙色爆闪彩虹动画，比他自己的 README 标题还大。文档页底部也有。GitHub README 表格专门一行写 WebGL 移植版，链接直达他仓库。
+
+他说我"抹除"他——除非他瞎了，否则怎么可能看不见？
 
 ### "强制降分辨率且不可调"
 
@@ -182,14 +190,14 @@ Apache License 2.0
 ---
 
 <p align="center">
-  <a href="https://github.com/Minecraftgoose/LiquidGlassCDN/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="Apache License 2.0">
+  <a href="https://github.com/Minecraftgoose/GooseHyperGlass/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="Apache License 2.0">
   <a href="https://glass.goose.cc.cd/liquid-glass.js"><img src="https://img.shields.io/badge/CDN-online-brightgreen.svg" alt="CDN"></a>
   <img src="https://img.shields.io/badge/tech-WebGL%201.0-orange.svg" alt="WebGL">
   <img src="https://img.shields.io/badge/zero-deps-9cf.svg" alt="Zero Dependencies">
   <img src="https://img.shields.io/badge/source-582KB%20TypeScript-yellow.svg" alt="TypeScript">
   <img src="https://img.shields.io/badge/7-components-ff69b4.svg" alt="Components">
-  <img src="https://img.shields.io/github/stars/Minecraftgoose/LiquidGlassCDN?style=social" alt="Stars">
-  <img src="https://img.shields.io/github/last-commit/Minecraftgoose/LiquidGlassCDN?label=updated" alt="Last Commit">
+  <img src="https://img.shields.io/github/stars/Minecraftgoose/GooseHyperGlass?style=social" alt="Stars">
+  <img src="https://img.shields.io/github/last-commit/Minecraftgoose/GooseHyperGlass?label=updated" alt="Last Commit">
 </p>
 
 # English
@@ -206,7 +214,7 @@ This project is built on the following upstream:
 | WebGL Port | [martin65536/liquid-glass-webgl](https://github.com/martin65536/liquid-glass-webgl) | Next.js, WebGL |
 | AI Assistance | WorkBuddy · DeepSeekv4-pro · DeepSeekv4-flash · Hunyuan3 | Code gen, docs, debugging |
 
-LiquidGlassCDN wraps it with:
+GooseHyperGlassCDN2.0 wraps it with:
 - Zero-dependency IIFE bundle for the web (esbuild)
 - React extracted as an empty stub — pure Custom Element implementation
 - CDN deployment with a static documentation site
@@ -274,7 +282,7 @@ el.setScroll([{ title:'Title', subtitle:'Subtitle' }]);
 ├── src-bundle/
 │   ├── liquid-glass.ts    # Web Component custom element
 │   └── empty-react.ts     # React alias stub
-├── liquid-glass-webgl-main/src/components/liquid-glass/
+├── liquid-glass/src/components/liquid-glass/
 │   ├── renderer/          # WebGL renderer
 │   ├── catalog/           # Component builders
 │   ├── shaders/           # GLSL shaders
