@@ -26,7 +26,7 @@
 
 ## 基于
 
-本项目是对以下两个上游项目的二开：
+本项目是对以下上游项目的二开：
 
 | 项目 | 仓库 | 技术栈 |
 |------|------|--------|
@@ -160,7 +160,7 @@ A pure WebGL liquid glass UI component library. Drop in one `<script>` tag, zero
 
 ## Based On
 
-This project is a fork/extension of two upstream projects:
+This project is built on the following upstream:
 
 | Project | Repository | Tech Stack |
 |---------|------------|------------|
