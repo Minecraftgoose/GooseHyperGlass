@@ -22,8 +22,6 @@
 
 纯 WebGL 渲染的液态玻璃 UI 组件库。一个 `<script>` 标签即用，零运行时依赖。
 
-— Minecraft_goose 开发 —
-
 ## 基于
 
 本项目是对以下上游项目的二开：
@@ -155,8 +153,6 @@ Apache License 2.0
 # English
 
 A pure WebGL liquid glass UI component library. Drop in one `<script>` tag, zero runtime dependencies.
-
-— Developed by Minecraft_goose —
 
 ## Based On
 
