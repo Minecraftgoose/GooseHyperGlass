@@ -152,6 +152,48 @@ Apache License 2.0
   <img src="https://img.shields.io/github/last-commit/Minecraftgoose/LiquidGlassCDN?label=updated" alt="Last Commit">
 </p>
 
+---
+
+## 关于某"耻辱柱"的回应
+
+martin65536 在其 README 中设置了"耻辱柱"章节，列出了以下指控。由于本项目的渲染引擎代码源自 martin65536/liquid-glass-webgl，这些指控的逻辑值得玩味。
+
+### "强制降分辨率且不可调"
+
+我们的代码来自你的仓库。你说我有这个问题——那你的原版也有这个问题。我们加了 dpr 属性让用户可调，你的版本让用户去设置页手动调。同一件事，两套说法。
+
+### "滥用 blur 滤镜"
+
+Blur 参数直接对应 Kyant 原版 Android 项目的玻璃模糊参数。如果你认为这是"滥用"，那你从 Kyant 移植的时候就已经"滥用"了。
+
+### "未处理浏览器默认点击行为"
+
+这个我承认早期版本确实没处理，后来已经修复（加了几行 CSS tap-highlight）。martin65536 的仓库初期连 README 和 LICENSE 都没有——半斤八两。
+
+### "对话框布局异常"
+
+早期版本的 bug，已修复。你的版本早期 bug 也不少——你的 README 自己写了"如果感觉画面卡顿，可到主页底部设置入口，适当降低 DPR"。
+
+### "渲染锯齿严重"
+
+WebGL 标准由 GPU 驱动控制 MSAA。这不是"缺失"，这是标准行为。
+
+### "连 G2 连续曲率圆角都未能正确实现"
+
+G2 continuous curvature 是公开数学方案，不是 martin65536 的独占技术。而且——你的代码里 G2 曲率实现是从 Kyant 的 Kotlin 源码移植的，我的代码是从你的仓库拉的。如果你能写对，我自然也能写对。如果我写错了，那说明你的原版也有问题——因为你代码里那一套就是从我拉的版本里来的。你总不能一边说"你的代码和我高度一致"，一边又说"你这里写错了但我那里是对的"吧？
+
+### "开源了又不让用"
+
+你的仓库用的是 **Apache-2.0 许可证**。Apache-2.0 明确允许"复制、修改、分发"——这是开源许可证的基本功能。你选了 Apache-2.0，就意味着你同意了别人可以用你的代码。
+
+现在我用了，你跑来骂我"抄袭"。那我问你：**你开源干屁的？**
+
+如果你不想让别人用你的代码，可以选择 All Rights Reserved，或者加 Commons Clause。你选了 Apache-2.0 又指责别人"抄袭"，这叫既当又立。整个开源社区没有这么玩的。
+
+### 总结
+
+martin65536 列出的所有技术问题，要么是无关紧要的细节（已修复），要么是他的原版同样存在的问题。他用 AI 生成的项目嘲笑别人代码质量，自己在 README 设专栏攻击另一个开源项目——这才是真正该被钉在耻辱柱上的行为。
+
 # English
 
 A pure WebGL liquid glass UI component library. Drop in one `<script>` tag, zero runtime dependencies.
