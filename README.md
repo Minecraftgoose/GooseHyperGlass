@@ -32,7 +32,7 @@
 |------|------|--------|
 | 原项目 | [Kyant0/AndroidLiquidGlass](https://github.com/Kyant0/AndroidLiquidGlass) | Android, Kotlin |
 
-GooseHyperGlassCDN2.0 基于 wong2 提供的 WebGL 渲染器封装，在其基础上做了：
+GooseHyperGlassCDN2.0 在 martin65536/liquid-glass-webgl（WebGL 移植版）基础上做了：
 - Web 端打包成零依赖的 IIFE bundle（esbuild）
 - 抽出 React 依赖为空桩，纯 Custom Element 实现
 - 提供 CDN 部署和静态文档站
@@ -166,7 +166,7 @@ This project is built on the following upstream:
 |---------|------------|------------|
 | Original | [Kyant0/AndroidLiquidGlass](https://github.com/Kyant0/AndroidLiquidGlass) | Android, Kotlin |
 
-GooseHyperGlassCDN2.0 wraps the wong2 WebGL renderer with:
+GooseHyperGlassCDN2.0 wraps the martin65536/liquid-glass-webgl (WebGL port) with:
 - Zero-dependency IIFE bundle for the web (esbuild)
 - React extracted as an empty stub — pure Custom Element implementation
 - CDN deployment with a static documentation site
